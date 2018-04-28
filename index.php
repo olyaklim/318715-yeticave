@@ -48,6 +48,21 @@ $lots = [
     ],
 ];
 
+// Напишите функцию для форматирования суммы и добавления к ней знака рубля
+function format_price($price) {
+
+    // Округлить число до целого, отделить пробелом три последних цифры
+    if ($price >= 1000) {
+        $price = ceil($price);
+        $price = number_format($price, 0, '.', ' ');
+    }
+
+    // Добавить к получившейся строке пробел и знак рубля - ₽
+    $price .= "&nbsp;&#8381";
+
+    return $price;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -142,7 +157,7 @@ $lots = [
                         <div class="lot__state">
                             <div class="lot__rate">
                                 <span class="lot__amount">Стартовая цена</span>
-                                <span class="lot__cost"><?php echo $value['price']; ?><b class="rub">р</b></span>
+                                <span class="lot__cost"><?php echo format_price($value['price']); ?></span>
                             </div>
                             <div class="lot__timer timer">
 
