@@ -52,7 +52,7 @@ $lots = [
 // HTML код главной страницы
 $page_content = renderTemplate('templates/index.php', ['lots' => $lots]);
 // окончательный HTML код
-$layout_content = renderTemplate('templates/layout.php', ['main_section' => $page_content, 'categories' => $categories, 'is_auth' => $is_auth, 'user_avatar' => $user_avatar, 'title' => $title_page, 'user_name' => $user_name]);
+$layout_content = renderTemplate('templates/layout.php', ['main_section' => $page_content, 'categories' => $categories, 'is_auth' => $is_auth, 'user_avatar' => $user_avatar, 'title_page' => $title_page, 'user_name' => $user_name]);
 print($layout_content);
 
 ?>
