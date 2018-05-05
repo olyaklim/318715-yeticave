@@ -1,5 +1,9 @@
 <?php
 
+// Установите часовую зону в московское время
+date_default_timezone_set('Europe/Moscow');
+
+
 // Функция должна подключить файл шаблона и использовать буферизацию вывода для захвата его содержимого
 function renderTemplate($path, $data = []) {
 
@@ -32,6 +36,21 @@ function format_price($price) {
     $price .= "&nbsp;&#8381";
 
     return $price;
+}
+
+// сколько часов и минут осталось до новых суток
+function getLotTime() {
+
+    $ts_midnight      = strtotime('tomorrow');
+    $secs_to_midnight = $ts_midnight - time();
+
+    $hours            = floor($secs_to_midnight / 3600);
+    $minutes          = floor(($secs_to_midnight % 3600) / 60);
+
+    $end_time = '00.00.0000 ' . $hours . ':' . $minutes. ':00';
+
+    return strftime("%R", strtotime($end_time));
+
 }
 
 ?>
