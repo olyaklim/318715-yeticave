@@ -1,0 +1,45 @@
+CREATE DATABASE yeticave
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
+
+USE yeticave;
+
+CREATE TABLE categories (
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name CHAR(255) NOT NULL
+);
+CREATE UNIQUE INDEX i_category ON categories(name);
+
+CREATE TABLE lots (
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  dt_add DATETIME NOT NULL,
+  name CHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  url_pictures CHAR(255) NOT NULL,
+  price DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
+  dt_end DATETIME NOT NULL,
+  price_step SMALLINT UNSIGNED,
+  author_id INT(11) UNSIGNED NOT NULL,
+  winner_id INT(11) UNSIGNED NOT NULL,
+  category_id INT(11) UNSIGNED NOT NULL
+);
+CREATE INDEX i_name ON lots(name);
+CREATE INDEX i_description ON lots(description);
+
+CREATE TABLE rate (
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  dt_registration DATETIME  NOT NULL,
+  price_user DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
+  user_id INT(11) UNSIGNED NOT NULL,
+  lot_id INT(11) UNSIGNED NOT NULL
+);
+
+CREATE TABLE users (
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email CHAR(255) NOT NULL,
+  name CHAR(255) NOT NULL,
+  password_user CHAR(64) NOT NULL,
+  avatar_path CHAR(255) DEFAULT NULL,
+  user_contact TEXT
+);
+CREATE UNIQUE INDEX i_email ON users(email);
