@@ -20,13 +20,13 @@ CREATE TABLE lots (
   dt_end DATETIME NOT NULL,
   price_step SMALLINT UNSIGNED,
   author_id INT(11) UNSIGNED NOT NULL,
-  winner_id INT(11) UNSIGNED NOT NULL,
+  winner_id INT(11) UNSIGNED DEFAULT NULL,
   category_id INT(11) UNSIGNED NOT NULL
 );
 CREATE INDEX i_name ON lots(name);
 CREATE INDEX i_description ON lots(description);
 
-CREATE TABLE rate (
+CREATE TABLE rates (
   id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   dt_registration DATETIME  NOT NULL,
   price_user DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
