@@ -6,7 +6,7 @@ $con = mysqli_connect("localhost", "root", "","yeticave");
 
 if (!$con) {
     $error = mysqli_connect_error();
-    var_dump("Ошибка Подключения БД : ". $error);
+    print("Ошибка Подключения БД : ". $error);
     return;
 }
 
@@ -25,7 +25,7 @@ $sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures, c.name as category FRO
     } else {
         $error = mysqli_error($con);
         $page_content = "";
-        var_dump("Ошибка MySQL: ". $error);
+        print("Ошибка MySQL: ". $error);
     }
 
 // Отправьте SQL-запрос для получения списка категорий
@@ -36,7 +36,7 @@ $categories = [];
 
 if (!$result) {
     $error = mysqli_error($con);
-    var_dump("Ошибка MySQL: ". $error);
+    print("Ошибка MySQL: ". $error);
 } else {
 
     $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
