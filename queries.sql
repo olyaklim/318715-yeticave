@@ -1,10 +1,12 @@
 USE yeticave;
 
 INSERT INTO categories (name)
-VALUES ('Лыжи'),
-       ('Cноуборды') ,
-       ('Одеджда'),
-       ('Обувь');
+VALUES ('Доски и лыжи'),
+       ('Крепления') ,
+       ('Ботинки'),
+       ('Одежда'),
+       ('Инструменты'),
+       ('Разное');
 
 
 INSERT INTO lots (dt_add, name, url_pictures, price, dt_end, price_step, author_id, category_id, description)
@@ -15,7 +17,14 @@ VALUES ('2018-04-01 13:10:05', '2018 Rossignol Snowboard',    'img/lot-1.jpg', '
        ('2018-04-01 04:45:11', '2018 Rossignol-C Snowboard',  'img/lot-5.jpg', '4900', '2018-06-10 12:00:00', '100', '2', '2', 'Freestyle board'),
        ('2018-03-01 13:10:05', '2011 Snowboard wwwwwwwwwww',  'img/lot-1.jpg', '21000', '2018-04-15 12:00:00', '100', '1', '2', 'board old 1'),
        ('2018-03-01 01:22:17', '2011 Snowboard eeeeeeeeeee',  'img/lot-2.jpg', '22000', '2018-04-20 18:00:00', '200', '2', '2', 'board old 2'),
-       ('2018-04-01 05:02:19', '2018 Footwear Snowboard',     'img/lot-6.jpg', '30500', '2018-06-11 10:00:00', '500', '3', '4', 'Footwear for board');
+       ('2018-04-01 05:02:19', '2018 Footwear Snowboard',     'img/lot-6.jpg', '30500', '2018-06-11 10:00:00', '500', '3', '4', 'Footwear for board'),
+
+       ('2018-05-09 15:22:17', '2014 Rossignol District Snowboard',  'img/lot-1.jpg', '10999', '2018-10-20 18:00:00', '200', '2', '2', 'board old 2'),
+       ('2018-05-09 14:22:17', 'DC Ply Mens 2016/2017 Snowboard',  'img/lot-2.jpg', '159999', '2018-06-11 18:00:00', '200', '2', '2', 'board old 2'),
+       ('2018-05-09 13:22:17', 'Крепления Union Contact Pro 2015 года размер L/XL',  'img/lot-3.jpg', '8000', '2018-06-20 18:00:00', '200', '2', '2', 'board old 2'),
+       ('2018-05-09 12:22:17', 'Ботинки для сноуборда DC Mutiny Charocal',  'img/lot-4.jpg', '10999', '2018-06-10 18:00:00', '200', '2', '2', 'board old 2'),
+       ('2018-05-08 11:22:17', 'Куртка для сноуборда DC Mutiny Charocal',  'img/lot-5.jpg', '7500', '2018-07-25 18:00:00', '200', '2', '2', 'board old 2'),
+       ('2018-05-07 10:22:17', 'Маска Oakley Canopy',  'img/lot-6.jpg', '5400', '2018-06-11 18:00:00', '200', '2', '2', 'board old 2');
 
 
 INSERT INTO rates (dt_registration, price_user, user_id, lot_id)
