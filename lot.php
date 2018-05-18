@@ -10,24 +10,6 @@ if (!$con) {
     return;
 }
 
-// Отправьте SQL-запрос для получения всей информации по новым лотам
-$sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures, c.name as category FROM lots l "
-   . " JOIN categories c "
-   . " ON l.category_id = c.id "
-   . " WHERE NOW() < l.dt_end "
-   . " ORDER BY l.dt_add DESC Limit 6";
-
-   if ($result_lot = mysqli_query($con, $sql_lot)) {
-        $lots = mysqli_fetch_all($result_lot, MYSQLI_ASSOC);
-
-        // передаем в шаблон результат выполнения HTML код главной страницы
-        $page_content = renderTemplate('templates/index.php', ['lots' => $lots]);
-    } else {
-        $error = mysqli_error($con);
-        $page_content = "";
-        print("Ошибка MySQL: ". $error);
-    }
-
 // Отправьте SQL-запрос для получения списка категорий
 $sql ="SELECT name FROM categories";
 
@@ -46,11 +28,41 @@ if (!$result) {
     }
 }
 
+$lots = [];
+$lot_id = intval($_GET['id']);
+
+// показать лот по его id
+$sql_lot = "SELECT l.dt_add, l.name, l.url_pictures, l.price, l.dt_end, l.price_step, l.author_id, l.description, c.name as category FROM lots l "
+. " JOIN categories c "
+. " ON l.category_id = c.id "
+. " WHERE l.id = '" . $lot_id . "' ";
+
+
+if ($result_lot = mysqli_query($con, $sql_lot)) {
+
+  if (!mysqli_num_rows($result_lot)) {
+    http_response_code(404);
+    $page_content = "Лот не найден!";
+  }
+  else {
+    $lots = mysqli_fetch_assoc($result_lot);
+
+    // передаем в шаблон результат выполнения HTML код главной страницы
+    $page_content = renderTemplate('templates/lot.php', ['lots' => $lots, 'categories' => $categories]);
+  }
+
+} else {
+  $error = mysqli_error($con);
+  $page_content = "";
+  print("Ошибка MySQL: ". $error);
+}
+
+
 $is_auth     = (bool) rand(0, 1);
-$title_page  = 'Главная';
+$title_page  = htmlspecialchars($lots['name']);
 $user_name   = 'Константин';
 $user_avatar = 'img/user.jpg';
-$main_page = true;
+$main_page = false;
 
 
 // окончательный HTML код
