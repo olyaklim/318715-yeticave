@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($errors) {
-        $page_content = renderTemplate('templates/add.php', ['categories' => $categories, 'errors' => $errors, 'lot' => $lot]);
+        $page_content = renderTemplate('templates/add.php', ['categories' => $categories, 'categories_name' => $categories_name, 'errors' => $errors, 'lot' => $lot]);
     } else {
 
         $sql = 'INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?,1)';
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 else {
-    $page_content = renderTemplate('templates/add.php', ['categories' => $categories, 'errors' => []]);
+    $page_content = renderTemplate('templates/add.php', ['categories' => $categories,'categories_name' => $categories_name, 'errors' => []]);
 }
 
 

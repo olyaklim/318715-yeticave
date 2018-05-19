@@ -1,6 +1,15 @@
 <nav class="nav">
     <ul class="nav__list container">
-      <li class="nav__item">
+
+    <?php foreach ($categories_name as $key => $value) {  ?>
+
+        <li class="nav__item">
+          <a href="all-lots.html"><?php echo $value;?></a>
+        </li>
+
+    <?php } ?>
+
+      <!-- <li class="nav__item">
         <a href="all-lots.html">Доски и лыжи</a>
       </li>
       <li class="nav__item">
@@ -17,7 +26,8 @@
       </li>
       <li class="nav__item">
         <a href="all-lots.html">Разное</a>
-      </li>
+      </li> -->
+
     </ul>
   </nav>
   <form class="form form--add-lot container<?php echo ($errors) ? " form--invalid" : "" ?>" action="/add.php" method="post"  enctype="multipart/form-data"> <!-- form--invalid -->
