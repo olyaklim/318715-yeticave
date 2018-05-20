@@ -82,7 +82,6 @@ WHERE l.id = '1';
 UPDATE lots SET name = '2018-A Rossignol District Snowboard'
 WHERE id = '1';
 
-
 -- 5) получить список самых свежих ставок для лота по его идентификатору;
 
 SELECT * FROM rates
