@@ -20,24 +20,8 @@ if (!$con) {
 }
 
 // Отправьте SQL-запрос для получения списка категорий
-$sql ="SELECT name, id FROM categories";
-
-$result = mysqli_query($con, $sql);
-$categories = [];
-$categories_name = [];
-
-if (!$result) {
-    $error = mysqli_error($con);
-    print("Ошибка MySQL: ". $error);
-} else {
-
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    foreach ($categories as $row) {
-        $categories_name[] = $row['name'];
-    }
-
-}
+$categories = getIdCategories($con);
+$categories_name = getCategories($con);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;

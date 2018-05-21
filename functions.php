@@ -53,4 +53,44 @@ function getLotTime() {
 
 }
 
+function getCategories($con) {
+
+    $sql ="SELECT name FROM categories";
+
+    $result = mysqli_query($con, $sql);
+    $categories = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        foreach ($rows as $row) {
+            $categories[] = $row['name'];
+        }
+    }
+
+    return $categories;
+
+}
+
+function getIdCategories ($con) {
+    $sql ="SELECT name, id FROM categories";
+
+    $result = mysqli_query($con, $sql);
+    $categories = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $categories;
+
+}
+
 ?>

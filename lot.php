@@ -11,22 +11,8 @@ if (!$con) {
 }
 
 // Отправьте SQL-запрос для получения списка категорий
-$sql ="SELECT name FROM categories";
+$categories = getCategories($con);
 
-$result = mysqli_query($con, $sql);
-$categories = [];
-
-if (!$result) {
-    $error = mysqli_error($con);
-    print("Ошибка MySQL: ". $error);
-} else {
-
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    foreach ($rows as $row) {
-        $categories[] = $row['name'];
-    }
-}
 
 $lots = [];
 $lot_id = intval($_GET['id']);

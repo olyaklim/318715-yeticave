@@ -29,24 +29,9 @@ $sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures, c.name as category FRO
     }
 
 // Отправьте SQL-запрос для получения списка категорий
-$sql ="SELECT name FROM categories";
+$categories = getCategories($con);
 
-$result = mysqli_query($con, $sql);
-$categories = [];
-
-if (!$result) {
-    $error = mysqli_error($con);
-    print("Ошибка MySQL: ". $error);
-} else {
-
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    foreach ($rows as $row) {
-        $categories[] = $row['name'];
-    }
-}
-
-$is_auth     = (bool) rand(0, 1);
+$is_auth     = false; //(bool) rand(0, 1);
 $title_page  = 'Главная';
 $user_name   = 'Константин';
 $user_avatar = 'img/user.jpg';
