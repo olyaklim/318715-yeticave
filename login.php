@@ -1,6 +1,8 @@
 <?php
 require_once('functions.php');
 
+session_start();
+
 $is_auth     = false; //(bool) rand(0, 1);
 $title_page  = 'Вход';
 $user_name   = 'Константин';
