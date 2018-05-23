@@ -1,5 +1,19 @@
 <?php
+session_start();
+
 require_once('functions.php');
+
+$is_auth     =  false;
+$user_name   = '';
+$user_avatar = '';
+$title_page  = htmlspecialchars($lots['name']);
+$main_page   = false;
+
+if (isset($_SESSION['user'])) {
+    $is_auth     = true;
+    $user_name   = $_SESSION['user']['name'];
+    $user_avatar = $_SESSION['user']['avatar_path'];
+}
 
 // В сценарии главной страницы выполните подключение к MySQL
 $con = mysqli_connect("localhost", "root", "","yeticave");
@@ -44,11 +58,6 @@ if ($result_lot = mysqli_query($con, $sql_lot)) {
 }
 
 
-$is_auth     = (bool) rand(0, 1);
-$title_page  = htmlspecialchars($lots['name']);
-$user_name   = 'Константин';
-$user_avatar = 'img/user.jpg';
-$main_page = false;
 
 
 // окончательный HTML код

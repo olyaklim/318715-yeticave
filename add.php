@@ -1,14 +1,24 @@
 <?php
+session_start();
+
 require_once('functions.php');
 require_once('mysql_helper.php');
 
-$is_auth     = (bool) rand(0, 1);
+$is_auth     =  false;
 $title_page  = 'Добавление лота';
-$user_name   = 'Константин';
-$user_avatar = 'img/user.jpg';
+$user_name   = '';
+$user_avatar = '';
 $main_page   = false;
 $errors      = [];
 
+if (!isset($_SESSION['user'])) {
+    http_response_code(403);
+    exit();
+} else {
+    $is_auth     = true;
+    $user_name   = $_SESSION['user']['name'];
+    $user_avatar = $_SESSION['user']['avatar_path'];
+}
 
 // В сценарии главной страницы выполните подключение к MySQL
 $con = mysqli_connect("localhost", "root", "","yeticave");
@@ -60,9 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $page_content = renderTemplate('templates/add.php', ['categories' => $categories, 'categories_name' => $categories_name, 'errors' => $errors, 'lot' => $lot]);
     } else {
 
-        $sql = 'INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?,1)';
+        $sql = 'INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $stmt = db_get_prepare_stmt($con, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot_img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step']]);
+
+        $stmt = db_get_prepare_stmt($con, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot_img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step'], $_SESSION['user']['id']]);
 
         $res  = mysqli_stmt_execute($stmt);
 

@@ -10,17 +10,19 @@
     </ul>
 </nav>
 
-<form class="form container" action="https://echo.htmlacademy.ru" method="post"> <!-- form--invalid -->
+<form class="form container <?php echo ($errors) ? " form--invalid" : "" ?>" action="" method="post"> <!-- form--invalid -->
 <h2>Вход</h2>
-<div class="form__item"> <!-- form__item--invalid -->
+<div class="form__item<?php echo (isset($errors['email'])) ? " form__item--invalid" : "" ?>"> <!-- form__item--invalid -->
   <label for="email">E-mail*</label>
-  <input id="email" type="text" name="email" placeholder="Введите e-mail" >
-  <span class="form__error">Введите e-mail</span>
+  <?php $value = isset($form['email']) ? $form['email'] : ""; ?>
+  <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?php echo $value;?>">
+  <span class="form__error"><?php echo $errors['email'];?></span>
 </div>
-<div class="form__item form__item--last">
+<div class="form__item form__item--last<?php echo (isset($errors['password'])) ? " form__item--invalid" : "" ?>">
   <label for="password">Пароль*</label>
-  <input id="password" type="text" name="password" placeholder="Введите пароль" >
-  <span class="form__error">Введите пароль</span>
+  <?php $value = isset($form['email']) ? $form['password'] : ""; ?>
+  <input id="password" type="text" name="password" placeholder="Введите пароль" value="<?php echo $value;?>">
+  <span class="form__error"><?php echo $errors['password'];?></span>
 </div>
 <button type="submit" class="button">Войти</button>
 </form>
