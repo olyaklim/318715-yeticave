@@ -1,5 +1,19 @@
 <?php
+session_start();
+
 require_once('functions.php');
+
+$title_page  = 'Главная';
+$main_page   = true;
+$is_auth     = false;
+$user_name   = '';
+$user_avatar = '';
+
+if (isset($_SESSION['user'])) {
+    $is_auth     = true;
+    $user_name   = $_SESSION['user']['name'];
+    $user_avatar = $_SESSION['user']['avatar_path'];
+}
 
 // В сценарии главной страницы выполните подключение к MySQL
 $con = mysqli_connect("localhost", "root", "","yeticave");
@@ -30,12 +44,6 @@ $sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures, c.name as category FRO
 
 // Отправьте SQL-запрос для получения списка категорий
 $categories = getCategories($con);
-
-$is_auth     = false; //(bool) rand(0, 1);
-$title_page  = 'Главная';
-$user_name   = 'Константин';
-$user_avatar = 'img/user.jpg';
-$main_page = true;
 
 
 // окончательный HTML код
