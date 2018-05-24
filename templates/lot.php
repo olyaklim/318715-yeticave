@@ -27,81 +27,50 @@
 
         <div class="lot-item__state">
           <div class="lot-item__timer timer">
-            <?php echo getLotTime(); ?>
+            <?php echo getLotTimeEnd($lots['dt_end']); ?>
           </div>
           <div class="lot-item__cost-state">
             <div class="lot-item__rate">
               <span class="lot-item__amount">Текущая цена</span>
-              <span class="lot-item__cost"><?php echo format_price($lots['price']); ?></span>
+              <span class="lot-item__cost"><?php echo format_price($price_lot); ?></span>
             </div>
             <div class="lot-item__min-cost">
-              Мин. ставка <span>12 000 р</span>
+              Мин. ставка <span><?php echo $min_price; ?> р</span>
             </div>
           </div>
-          <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
-            <p class="lot-item__form-item">
+
+
+          <?php if ($rate_visible) { ?>
+          <form class="lot-item__form <?php echo ($errors) ? "form--invalid" : "" ?>" action="" method="post">
+            <p class="lot-item__form-item <?php echo (isset($errors['cost'])) ? "form__item--invalid" : "" ?>">
               <label for="cost">Ваша ставка</label>
-              <input id="cost" type="number" name="cost" placeholder="12 000">
+              <?php $value = isset($rate['cost']) ? $rate['cost'] : ""; ?>
+              <input id="cost" type="number" name="cost" placeholder="12 000" value="<?php echo $value;?>">
+              <span class="form__error"><?php echo $errors['cost'];?></span>
             </p>
             <button type="submit" class="button">Сделать ставку</button>
           </form>
+          <?php } ?>
+
+
         </div>
 
        <?php } ?>
 
         <div class="history">
-          <h3>История ставок (<span>10</span>)</h3>
+          <h3>История ставок (<span><?php echo count($table_rates);?></span>)</h3>
           <table class="history__list">
-            <tr class="history__item">
-              <td class="history__name">Иван</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">5 минут назад</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Константин</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">20 минут назад</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Евгений</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">Час назад</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Игорь</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 08:21</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Енакентий</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 13:20</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Семён</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 12:20</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Илья</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 10:20</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Енакентий</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 13:20</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Семён</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 12:20</td>
-            </tr>
-            <tr class="history__item">
-              <td class="history__name">Илья</td>
-              <td class="history__price">10 999 р</td>
-              <td class="history__time">19.03.17 в 10:20</td>
-            </tr>
+
+          <?php foreach ($table_rates as $value) {  ?>
+
+              <tr class="history__item">
+                  <td class="history__name"><?php echo $value['name_user'];?></td>
+                  <td class="history__price"><?php echo format_price($value['price_user']); ?></td>
+                  <td class="history__time"><?php echo getRateTime($value['dt_registration']); ?></td>
+              </tr>
+
+          <?php } ?>
+
           </table>
         </div>
       </div>
