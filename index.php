@@ -25,7 +25,7 @@ if (!$con) {
 }
 
 // Отправьте SQL-запрос для получения всей информации по новым лотам
-$sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures, c.name as category FROM lots l "
+$sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures,l.dt_end, c.name as category FROM lots l "
    . " JOIN categories c "
    . " ON l.category_id = c.id "
    . " WHERE NOW() < l.dt_end "

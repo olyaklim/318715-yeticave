@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
+//var_dump(strtotime($lot['lot-date']) > strtotime('midnight') );
+    if ($lot['lot-date'] && (strtotime($lot['lot-date']) < strtotime('tomorrow') ) ) { 
+    	$errors['lot-date'] = 'Дата должна быть больше текущей';
+    }
 
     if (isset($_FILES['lot_img']['name']) && $_FILES['lot_img']['name']) {
         $tmp_name = $_FILES['lot_img']['tmp_name'];
