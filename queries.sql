@@ -43,8 +43,6 @@ VALUES ('igor@mail.ru', 'igor', 'igor1990', 'img/igor1990.jpg', '097-55-11-235')
        ('katya@mail.ru', 'katya', 'katya1990', 'img/katya1988.jpg', '097-77-00-277');
 
 
-
-
 -- 1) получить все категории;
 SELECT * FROM categories;
 

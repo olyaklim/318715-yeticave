@@ -30,8 +30,8 @@ if (!$con) {
 }
 
 // Отправьте SQL-запрос для получения списка категорий
-$categories = getIdCategories($con);
-$categories_name = getCategories($con);
+$categories = get_id_categories($con);
+$categories_name = get_categories($con);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
@@ -39,66 +39,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
     $dict     = ['lot-name' => 'Название', 'category' => 'Категория', 'lot-rate' => 'Начальная цена', 'message' => 'Описание', 'lot-step' => 'Шаг ставки', 'lot-date' => 'Дата окончания торгов', 'file' => 'Изображние'];
 
+    if (isset($lot['lot-rate']) && intval($lot['lot-rate']) < 1) {
+        $errors['lot-rate'] = 'Поле Ставка должно быть больше ноля';
+    }
+
+    if (isset($lot['lot-step']) && intval($lot['lot-step']) < 1) {
+        $errors['lot-step'] = 'Поле Шаг должно быть больше ноля';
+    }
+
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-//var_dump(strtotime($lot['lot-date']) > strtotime('midnight') );
-    if ($lot['lot-date'] && (strtotime($lot['lot-date']) < strtotime('tomorrow') ) ) { 
+
+    if ($lot['lot-date'] && (strtotime($lot['lot-date']) < strtotime('tomorrow') ) ) {
     	$errors['lot-date'] = 'Дата должна быть больше текущей';
     }
 
     if (isset($_FILES['lot_img']['name']) && $_FILES['lot_img']['name']) {
-        $tmp_name = $_FILES['lot_img']['tmp_name'];
 
-        $filename = uniqid() . '.jpg';
-        $lot['path'] = $filename;
+        $file_types = ['image/jpeg', 'image/png'];
+        $tmp_name = $_FILES['lot_img']['tmp_name'];
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $tmp_name);
 
-        if ($file_type !== "image/jpeg") {
-            $errors['file'] = 'Загрузите картинку в формате JPG';
-        }
-        else {
+        if (!in_array($file_type, $file_types)) {
+            $errors['file'] = 'Загрузите картинку в формате JPG или PNG';
+        } else {
+            $img_type = ($file_type == "image/jpeg") ? '.jpg' : '.png';
+            $filename = uniqid() . $img_type;
             move_uploaded_file($tmp_name, 'img/' . $filename);
             $lot['lot_img'] = 'img/' . $filename;
         }
-    }
-    else {
+    } else {
         $errors['file'] = 'Вы не загрузили файл';
     }
 
     if ($errors) {
-        $page_content = renderTemplate('templates/add.php', ['categories' => $categories, 'categories_name' => $categories_name, 'errors' => $errors, 'lot' => $lot]);
+        $page_content = render_template('templates/add.php', ['categories' => $categories, 'categories_name' => $categories_name, 'errors' => $errors, 'lot' => $lot]);
     } else {
 
         $sql = 'INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?, ?)';
 
-
-        $stmt = db_get_prepare_stmt($con, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot_img'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step'], $_SESSION['user']['id']]);
+        $stmt = db_get_prepare_stmt($con, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot_img'], intval($lot['lot-rate']), $lot['lot-date'], intval($lot['lot-step']), $_SESSION['user']['id']]);
 
         $res  = mysqli_stmt_execute($stmt);
 
         if ($res) {
             $lot_id = mysqli_insert_id($con);
             header("Location: lot.php?id=" . $lot_id);
-        }
-        else {
+        } else {
             http_response_code(503);
             print("Ошибка MySQL: ". mysqli_error($con));
         }
     }
-
+} else {
+    $page_content = render_template('templates/add.php', ['categories' => $categories,'categories_name' => $categories_name, 'errors' => []]);
 }
-else {
-    $page_content = renderTemplate('templates/add.php', ['categories' => $categories,'categories_name' => $categories_name, 'errors' => []]);
-}
-
 
 // окончательный HTML код
-$layout_content = renderTemplate('templates/layout.php', ['main_section' => $page_content, 'categories' => $categories_name, 'is_auth' => $is_auth, 'user_avatar' => $user_avatar, 'title_page' => $title_page, 'user_name' => $user_name, 'main_page' =>$main_page]);
+$layout_content = render_template('templates/layout.php', ['main_section' => $page_content, 'categories' => $categories_name, 'categories_id' => $categories, 'is_auth' => $is_auth, 'user_avatar' => $user_avatar, 'title_page' => $title_page, 'user_name' => $user_name, 'main_page' =>$main_page]);
 print($layout_content);
 
 ?>

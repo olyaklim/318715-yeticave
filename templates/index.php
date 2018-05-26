@@ -2,24 +2,15 @@
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
     <ul class="promo__list">
-        <li class="promo__item promo__item--boards">
-            <a class="promo__link" href="all-lots.html">Доски и лыжи</a>
-        </li>
-        <li class="promo__item promo__item--attachment">
-            <a class="promo__link" href="all-lots.html">Крепления</a>
-        </li>
-        <li class="promo__item promo__item--boots">
-            <a class="promo__link" href="all-lots.html">Ботинки</a>
-        </li>
-        <li class="promo__item promo__item--clothing">
-            <a class="promo__link" href="all-lots.html">Одежда</a>
-        </li>
-        <li class="promo__item promo__item--tools">
-            <a class="promo__link" href="all-lots.html">Инструменты</a>
-        </li>
-        <li class="promo__item promo__item--other">
-            <a class="promo__link" href="all-lots.html">Разное</a>
-        </li>
+
+        <?php foreach ($categories_id as $cat) { ?>
+
+            <li class="promo__item">
+                <a class="promo__link" href="all-lots.php?id_categ=<?php echo $cat['id'];?>"><?php echo htmlspecialchars($cat['name']);?></a>
+            </li>
+
+        <?php } ?>
+
     </ul>
 </section>
 <section class="lots">
@@ -32,7 +23,7 @@
 
         <li class="lots__item lot">
             <div class="lot__image">
-                <img src="<?php echo $value['url_pictures']; ?>" width="350" height="260" alt="<?php echo htmlspecialchars($value['name']); ?>">
+                <img src="<?php echo htmlspecialchars($value['url_pictures']); ?>" width="350" height="260" alt="<?php echo htmlspecialchars($value['name']); ?>">
             </div>
 
             <div class="lot__info">
@@ -44,7 +35,7 @@
                         <span class="lot__cost"><?php echo format_price($value['price']); ?></span>
                     </div>
                     <div class="lot__timer timer">
-                        <?php echo getLotTimeEnd($value['dt_end']); ?>
+                        <?php echo get_lot_time_end($value['dt_end']); ?>
                     </div>
                 </div>
             </div>
