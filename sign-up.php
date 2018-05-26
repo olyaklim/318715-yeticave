@@ -20,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $required = ['email', 'password', 'name', 'message'];
     $dict     = ['email' => 'Email', 'name' => 'Имя', 'password' => 'Пароль', 'message' => 'Контактные данные'];
 
+    if (isset($user['email']) && !filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Это поле заполнено с ошибками';
+    }
+
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
