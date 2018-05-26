@@ -43,3 +43,5 @@ CREATE TABLE users (
   user_contact TEXT
 );
 CREATE UNIQUE INDEX i_email ON users(email);
+
+CREATE FULLTEXT INDEX lot_ft_search ON lots(name, description);
