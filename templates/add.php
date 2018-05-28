@@ -53,6 +53,7 @@
         </div>
       </div>
       <div class="form__input-file">
+        <input type="hidden" name="filepath" value="<?php echo htmlspecialchars($lot['lot_img']);?>">
         <input class="visually-hidden" type="file" id="photo2" name="lot_img" value="<?php echo htmlspecialchars($lot['lot_img']);?>">
         <label for="photo2">
           <span>+ Добавить</span>

@@ -1071,6 +1071,10 @@ input:invalid .form__error{
   font-weight: 700;
 }
 
+.history__list {
+  width: 100%;
+}
+
 .history__item {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1084,6 +1088,10 @@ input:invalid .form__error{
   border-bottom: 1px solid #dbe6e9;
   font-size: 13px;
   font-weight: 400;
+}
+
+.history__item--win {
+  background-color: #d7f5b5;
 }
 
 .history__item td {

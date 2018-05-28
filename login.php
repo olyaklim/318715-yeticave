@@ -2,17 +2,17 @@
 
 session_start();
 
+require_once('connect_db.php');
 require_once('functions.php');
+require_once 'vendor/autoload.php';
 
 $is_auth     = false;
 $title_page  = 'Вход';
-$user_name   = 'Константин';
-$user_avatar = 'img/user.jpg';
+$user_name   = '';
+$user_avatar = '';
 $main_page   = false;
 $errors      = [];
 
-// В сценарии главной страницы выполните подключение к MySQL
-$con = mysqli_connect("localhost", "root", "", "yeticave");
 $categories = get_categories($con);
 $categories_id = get_id_categories($con);
 

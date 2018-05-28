@@ -1,8 +1,10 @@
 <?php
 session_start();
 
+require_once('connect_db.php');
 require_once('functions.php');
 require_once('mysql_helper.php');
+require_once 'vendor/autoload.php';
 
 $is_auth     =  false;
 $title_page  = 'Добавление лота';
@@ -18,15 +20,6 @@ if (!isset($_SESSION['user'])) {
     $is_auth     = true;
     $user_name   = $_SESSION['user']['name'];
     $user_avatar = $_SESSION['user']['avatar_path'];
-}
-
-// В сценарии главной страницы выполните подключение к MySQL
-$con = mysqli_connect("localhost", "root", "","yeticave");
-
-if (!$con) {
-    $error = mysqli_connect_error();
-    print("Ошибка Подключения БД : ". $error);
-    return;
 }
 
 // Отправьте SQL-запрос для получения списка категорий
@@ -53,28 +46,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if ($lot['lot-date'] && (strtotime($lot['lot-date']) < strtotime('tomorrow') ) ) {
+    if (isset($lot['lot-date']) && $lot['lot-date'] && (strtotime($lot['lot-date']) < strtotime('tomorrow') ) ) {
     	$errors['lot-date'] = 'Дата должна быть больше текущей';
     }
 
     if (isset($_FILES['lot_img']['name']) && $_FILES['lot_img']['name']) {
 
-        $file_types = ['image/jpeg', 'image/png'];
         $tmp_name = $_FILES['lot_img']['tmp_name'];
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-
-        if (!in_array($file_type, $file_types)) {
-            $errors['file'] = 'Загрузите картинку в формате JPG или PNG';
-        } else {
-            $img_type = ($file_type == "image/jpeg") ? '.jpg' : '.png';
-            $filename = uniqid() . $img_type;
-            move_uploaded_file($tmp_name, 'img/' . $filename);
+        $file_type = mime_content_type($tmp_name);
+        if ($file_type == 'image/png') {
+            $filename = uniqid() . '.png';
             $lot['lot_img'] = 'img/' . $filename;
+        } elseif ($file_type == 'image/jpeg') {
+            $filename = uniqid() . '.jpeg';
+            $lot['lot_img'] = 'img/' . $filename;
+        } elseif ($file_type == 'image/jpg') {
+            $filename = uniqid() . '.jpg';
+            $lot['lot_img'] = 'img/' . $filename;
+        } else {
+            $errors['file'] = 'Допустимый формат картинок: jpg jpeg png';
         }
+
+        if (!$errors['file']) {
+            move_uploaded_file($tmp_name, $lot['lot_img']);
+        }
+
     } else {
-        $errors['file'] = 'Вы не загрузили файл';
+
+        if (isset($lot['filepath']) && $lot['filepath']) {
+            $lot['lot_img'] = $lot['filepath'];
+        } else {
+            $errors['file'] = 'Вы не загрузили файл';
+        }
+
     }
 
     if ($errors) {

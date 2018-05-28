@@ -1,15 +1,14 @@
 <?php
+require_once('connect_db.php');
 require_once('mysql_helper.php');
 require_once('functions.php');
+require_once 'vendor/autoload.php';
 
 $is_auth     = false;
 $title_page  = 'Регистрация';
-$user_name   = 'Константин';
-$user_avatar = 'img/user.jpg';
-$main_page = false;
-
-// В сценарии главной страницы выполните подключение к MySQL
-$con = mysqli_connect("localhost", "root", "","yeticave");
+$user_name   = '';
+$user_avatar = '';
+$main_page   = false;
 
 $categories = get_categories($con);
 $categories_id = get_id_categories($con);
@@ -32,20 +31,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_FILES['user_img']['name']) && $_FILES['user_img']['name']) {
         $tmp_name = $_FILES['user_img']['tmp_name'];
-
-        $filename = uniqid() . '.jpg';
-        $user['path'] = $filename;
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-
-        if ($file_type !== "image/jpeg") {
-            $errors['file'] = 'Загрузите картинку в формате JPG';
-        } else {
-            move_uploaded_file($tmp_name, 'img/' . $filename);
+        $file_type = mime_content_type($tmp_name);
+        if ($file_type == 'image/png') {
+            $filename = uniqid() . '.png';
             $user['user_img'] = 'img/' . $filename;
+        } elseif ($file_type == 'image/jpeg') {
+            $filename = uniqid() . '.jpeg';
+            $user['user_img'] = 'img/' . $filename;
+        } elseif ($file_type == 'image/jpg') {
+            $filename = uniqid() . '.jpg';
+            $user['user_img'] = 'img/' . $filename;
+        } else {
+            $errors['file'] = 'Допустимый формат картинок: jpg jpeg png';
         }
-    }
+
+        if (!$errors['file']) {
+            move_uploaded_file($tmp_name, $user['user_img']);
+        }
+
+    } else {
+        $user['user_img'] = $user['filepath'];
+    };
 
     if ($user['email']) {
         $email = mysqli_real_escape_string($con, $user['email']);
@@ -56,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
         }
     }
+ // var_dump($user);
 
     if ($errors) {
         $page_content = render_template('templates/sign-up.php', ['categories' => $categories, 'categories_id' => $categories_id, 'errors' => $errors, 'user' => $user]);

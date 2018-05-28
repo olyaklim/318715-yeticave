@@ -1,0 +1,13 @@
+{
+    "name": "olyaklim/318715-yeticave",
+    "description": "Online auction",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olga Klimenko",
+            "email": "olya_klim@ukr.net"
+        }
+    ],
+    "require": {}
+}
