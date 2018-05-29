@@ -5,38 +5,36 @@ require_once('connect_db.php');
 require_once('functions.php');
 require_once 'vendor/autoload.php';
 
-$title_page  = 'Главная';
-$main_page   = true;
+$title_page  = 'Список моих ставок';
+$main_page   = false;
 $is_auth     = false;
 $user_name   = '';
 $user_avatar = '';
+$table_rates = [];
 
-if (isset($_SESSION['user'])) {
+if (!isset($_SESSION['user'])) {
+    http_response_code(403);
+    exit();
+} else {
     $is_auth     = true;
     $user_name   = $_SESSION['user']['name'];
     $user_avatar = $_SESSION['user']['avatar_path'];
 }
 
 // Отправьте SQL-запрос для получения списка категорий
-$categories    = get_categories($con);
+$categories = get_categories($con);
 $categories_id = get_id_categories($con);
+// Получить список ставок пользователя
+$table_rates = get_user_rates($con, $_SESSION['user']['id']);
+// Получить победившие лоты пользователя
+$user_win_lots = get_win_lots($con, $_SESSION['user']['id']);
 
-// Отправьте SQL-запрос для получения всей информации по новым лотам
-$sql_lot = "SELECT l.id, l.name, l.price, l.url_pictures,l.dt_end, c.name as category FROM lots l "
-   . " JOIN categories c "
-   . " ON l.category_id = c.id "
-   . " WHERE NOW() < l.dt_end "
-   . " ORDER BY l.dt_add DESC Limit 6";
-
-if ($result_lot = mysqli_query($con, $sql_lot)) {
-    $lots = mysqli_fetch_all($result_lot, MYSQLI_ASSOC);
+if ($table_rates) {
 
     // передаем в шаблон результат выполнения HTML код главной страницы
-    $page_content = render_template('templates/index.php', ['lots' => $lots, 'categories_id' => $categories_id]);
+    $page_content = render_template('templates/my_rates.php', ['lots' => $lots, 'categories' => $categories_id, 'table_rates' => $table_rates, 'user_win_lots' => $user_win_lots]);
 } else {
-    $error = mysqli_error($con);
-    $page_content = "";
-    print("Ошибка MySQL: ". $error);
+    $page_content = "Вы еще не делали ставок";
 }
 
 // окончательный HTML код

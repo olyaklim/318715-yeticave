@@ -41,6 +41,7 @@
             </div>
             <div class="user-menu__logged">
                 <p><?php echo $user_name; ?></p>
+                <a href="/my_rates.php">Мои ставки</a>
                 <a href="/logout.php">Выход</a>
             </div>
         <?php } else { ?>

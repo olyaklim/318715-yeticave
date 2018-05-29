@@ -1,8 +1,10 @@
 <?php
 session_start();
 
+require_once('connect_db.php');
 require_once('mysql_helper.php');
 require_once('functions.php');
+require_once 'vendor/autoload.php';
 
 $title_page  = 'Результаты поиска';
 $main_page   = false;
@@ -14,15 +16,6 @@ if (isset($_SESSION['user'])) {
   $is_auth     = true;
   $user_name   = $_SESSION['user']['name'];
   $user_avatar = $_SESSION['user']['avatar_path'];
-}
-
-// подключение к MySQL
-$con = mysqli_connect("localhost", "root", "","yeticave");
-
-if (!$con) {
-  $error = mysqli_connect_error();
-  print("Ошибка Подключения БД : ". $error);
-  return;
 }
 
 $categories = get_categories($con);

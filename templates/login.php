@@ -23,7 +23,7 @@
 <div class="form__item form__item--last<?php echo (isset($errors['password'])) ? " form__item--invalid" : "" ?>">
   <label for="password">Пароль*</label>
   <?php $value = isset($form['email']) ? htmlspecialchars($form['password']) : ""; ?>
-  <input id="password" type="text" name="password" placeholder="Введите пароль" value="<?php echo $value;?>">
+  <input id="password" type="password" name="password" placeholder="Введите пароль" value="<?php echo $value;?>">
   <span class="form__error"><?php echo $errors['password'];?></span>
 </div>
 <button type="submit" class="button">Войти</button>

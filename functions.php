@@ -133,6 +133,10 @@ function get_num_ending($number, $endingArray) {
  */
 function get_rate_time($rate_date) {
 
+    $rate_date_zone = new DateTime($rate_date);
+    $rate_date_zone->setTimezone(new DateTimeZone('Europe/Moscow'));
+    $rate_date = $rate_date_zone->format('Y-m-d H:i:s');
+
     $rate_time    = strtotime($rate_date);
     $secs_to_time = time() - $rate_time;
     $hours        = floor($secs_to_time / 3600);
@@ -182,6 +186,75 @@ function get_rates($con, $lot_id) {
     }
 
     return $rates;
+
+}
+
+
+/**
+ * Получает ставки пользователя
+ *
+ * @param $con Ссылка на базу данных
+ * @param string $user_id ИД пользователя
+ * @return array Массив лотов
+ */
+function get_user_rates($con, $user_id) {
+
+    $sql = "SELECT  r.dt_registration , r.price_user, r.user_id, r.lot_id, u.user_contact, l.name as name_lot FROM rates r "
+        . " JOIN lots l "
+        . " ON r.lot_id = l.id "
+        . " JOIN users u  "
+        . " ON l.author_id = u.id "
+        . " WHERE r.user_id = '" . $user_id . "'  ORDER BY r.dt_registration DESC ";
+
+    $result = mysqli_query($con, $sql);
+    $rates = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+        $rates = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $rates;
+
+}
+
+
+/**
+ * Получить победившие лоты пользователя
+ *
+ * @param $con Ссылка на базу данных
+ * @param string $user_id ИД пользователя
+ * @return array Данные победителя
+ */
+function get_win_lots($con, $user_id) {
+
+    $sql = "SELECT r.lot_id FROM rates r "
+    . " JOIN lots l "
+    . " ON l.id = r.lot_id  "
+    . " WHERE r.user_id='" . $user_id . "' "
+    . " AND ((l.id, r.price_user) IN "
+    . "   (SELECT r.lot_id, MAX(r.price_user) "
+    . "   FROM rates r "
+    . "   GROUP BY r.lot_id)) "
+    . " AND NOW() >= l.dt_end ";
+
+    $result = mysqli_query($con, $sql);
+    $lots = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        foreach ($rows as $row) {
+            $lots[] = $row['lot_id'];
+        }
+    }
+
+    return $lots;
 
 }
 

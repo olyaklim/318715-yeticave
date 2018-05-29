@@ -23,7 +23,7 @@
     <div class="form__item<?php echo (isset($errors['password'])) ? " form__item--invalid" : "" ?>">
       <label for="password">Пароль*</label>
       <?php $value = isset($user['password']) ? htmlspecialchars($user['password']) : ""; ?>
-      <input id="password" type="text" name="password" placeholder="Введите пароль" value="<?php echo $value;?>">
+      <input id="password" type="password" name="password" placeholder="Введите пароль" value="<?php echo $value;?>">
       <span class="form__error">Введите пароль</span>
     </div>
     <div class="form__item<?php echo (isset($errors['name'])) ? " form__item--invalid" : "" ?>">
@@ -38,7 +38,7 @@
       <textarea id="message" name="message" placeholder="Напишите как с вами связаться" ><?php echo $value;?></textarea>
       <span class="form__error">Напишите как с вами связаться</span>
     </div>
-    <div class="form__item form__item--file form__item--last <?php echo (isset($errors['file'])) ? " form__item--invalid " : "" ?> <?php echo (isset($user['user_img'])) ? " form__item--uploaded" : "" ?>">
+    <div class="form__item form__item--file form__item--last <?php echo (isset($errors['file'])) ? " form__item--invalid " : "" ?> <?php echo (isset($user['user_img']) && $user['user_img']) ? " form__item--uploaded" : "" ?>">
       <label>Аватар</label>
       <div class="preview">
         <button class="preview__remove" type="button">x</button>
@@ -46,14 +46,17 @@
           <img src="<?php echo htmlspecialchars($user['user_img']);?>" width="113" height="113" alt="Ваш аватар">
         </div>
       </div>
+
       <div class="form__input-file">
+        <input type="hidden" name="filepath" value="<?php echo htmlspecialchars($user['user_img']);?>">
         <input class="visually-hidden" type="file" id="photo2" value="<?php echo htmlspecialchars($user['user_img']);?>" name="user_img">
         <label for="photo2">
           <span>+ Добавить</span>
         </label>
       </div>
+      <span class="form__error"><?php echo $errors['file'];?></span>
     </div>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <button type="submit" class="button">Зарегистрироваться</button>
-    <a class="text-link" href="#">Уже есть аккаунт</a>
+    <a class="text-link" href="/login.php">Уже есть аккаунт</a>
   </form>

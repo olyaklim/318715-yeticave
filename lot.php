@@ -1,8 +1,10 @@
 <?php
 session_start();
 
+require_once('connect_db.php');
 require_once('mysql_helper.php');
 require_once('functions.php');
+require_once 'vendor/autoload.php';
 
 $is_auth     =  false;
 $user_name   = '';
@@ -21,15 +23,6 @@ if (isset($_SESSION['user'])) {
     $user_avatar = $_SESSION['user']['avatar_path'];
 }
 
-// В сценарии главной страницы выполните подключение к MySQL
-$con = mysqli_connect("localhost", "root", "","yeticave");
-
-if (!$con) {
-    $error = mysqli_connect_error();
-    print("Ошибка Подключения БД : ". $error);
-    return;
-}
-
 // Отправьте SQL-запрос для получения списка категорий
 $categories = get_categories($con);
 $categories_id = get_id_categories($con);
@@ -43,7 +36,6 @@ $sql_lot = "SELECT l.dt_add, l.name, l.url_pictures, l.price, l.dt_end, l.price_
 . " JOIN categories c "
 . " ON l.category_id = c.id "
 . " WHERE l.id = '" . $lot_id . "' ";
-
 
 if ($result_lot = mysqli_query($con, $sql_lot)) {
 
@@ -118,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
 
-        $res = add_rate ($con, $rate['cost'], $_SESSION['user']['id'], $lot_id);
+        $res = add_rate($con, $rate['cost'], $_SESSION['user']['id'], $lot_id);
 
         if ($res) {
             header("Location: lot.php?id=" . $lot_id);
