@@ -343,6 +343,34 @@ function get_categories($con) {
 }
 
 
+
+/**
+ * Получает ставки по указанному лоту
+ *
+ * @param $con Ссылка на базу данных
+ * @param string $lot_id ИД лота
+ * @return array Массив лотов
+ */
+function get_user_data($con, $user_id) {
+
+    $sql = "SELECT * FROM users u "
+        . " WHERE u.id = '" . $user_id . "'";
+
+    $result = mysqli_query($con, $sql);
+    $users = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+        $users = mysqli_fetch_assoc($result);
+    }
+
+    return $users;
+
+}
+
+
 /**
  * Получает ИД категорий
  *
@@ -377,7 +405,7 @@ function get_id_categories($con) {
  * @param string $lot_id ИД лота
  * @return bool результат выполнения запроса
  */
-function add_rate ($con, $cost, $user_id, $lot_id) {
+function add_rate($con, $cost, $user_id, $lot_id) {
 
     $res = [];
     $sql = "INSERT INTO rates (dt_registration, price_user, user_id, lot_id) VALUES (NOW(),?, ?, ?)";
@@ -386,6 +414,23 @@ function add_rate ($con, $cost, $user_id, $lot_id) {
     $res  = mysqli_stmt_execute($stmt);
 
     return $res;
+
+}
+
+
+/**
+ * Обновить победителя
+ *
+ * @param $con Ссылка на базу данных
+ * @param string $user_id ИД пользователя
+ * @param string $lot_id ИД лота
+ * @return bool результат выполнения запроса
+ */
+function update_winner($con, $user_id, $lot_id) {
+
+    $sql = "UPDATE lots SET winner_id = ? WHERE id = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$user_id, $lot_id]);
+    return  mysqli_stmt_execute($stmt);
 
 }
 
@@ -418,5 +463,39 @@ function get_search_lots($con, $search, $offset = 0) {
     return $lots;
 
 }
+
+
+/**
+ * Поиск завершенных лотов без победителя
+ *
+ * @param $con Ссылка на базу данных
+ * @return array Массив лотов
+ */
+ function get_no_win_lots($con) {
+
+    $sql = "SELECT l.id, l.name, r.price_user, r.user_id FROM lots l "
+        . " LEFT JOIN rates r "
+        . " ON l.id = r.lot_id  and  ((r.lot_id, r.price_user) IN "
+        . " (SELECT r.lot_id, MAX(r.price_user) "
+        . " FROM rates r "
+        . " GROUP BY r.lot_id)) "
+        . " WHERE NOW() >= l.dt_end "
+        . " AND l.winner_id IS NULL "
+        . " AND r.price_user IS NOT NULL ";
+
+    $result = mysqli_query($con, $sql);
+    $lots = [];
+
+    if (!$result) {
+        $error = mysqli_error($con);
+        print("Ошибка MySQL: ". $error);
+    } else {
+        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $lots;
+
+}
+
 
 ?>

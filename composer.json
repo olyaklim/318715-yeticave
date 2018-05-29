@@ -9,5 +9,5 @@
             "email": "olya_klim@ukr.net"
         }
     ],
-    "require": {}
+    "require": {"swiftmailer/swiftmailer": "^6.0"}
 }

@@ -3,7 +3,7 @@ session_start();
 
 require_once('connect_db.php');
 require_once('functions.php');
-require_once 'vendor/autoload.php';
+require_once('vendor/autoload.php');
 
 $title_page  = 'Список моих ставок';
 $main_page   = false;

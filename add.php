@@ -4,7 +4,7 @@ session_start();
 require_once('connect_db.php');
 require_once('functions.php');
 require_once('mysql_helper.php');
-require_once 'vendor/autoload.php';
+require_once('vendor/autoload.php');
 
 $is_auth     =  false;
 $title_page  = 'Добавление лота';
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $page_content = render_template('templates/add.php', ['categories' => $categories, 'categories_name' => $categories_name, 'errors' => $errors, 'lot' => $lot]);
     } else {
 
-        $sql = 'INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = "INSERT INTO lots (dt_add, category_id, name, description, url_pictures, price, dt_end, price_step, author_id) VALUES (NOW(),?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = db_get_prepare_stmt($con, $sql, [$lot['category'], $lot['lot-name'], $lot['message'], $lot['lot_img'], intval($lot['lot-rate']), $lot['lot-date'], intval($lot['lot-step']), $_SESSION['user']['id']]);
 
