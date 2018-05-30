@@ -407,10 +407,15 @@ function get_id_categories($con) {
  */
 function add_rate($con, $cost, $user_id, $lot_id) {
 
-    $res = [];
-    $sql = "INSERT INTO rates (dt_registration, price_user, user_id, lot_id) VALUES (NOW(),?, ?, ?)";
+    $datetime = new DateTime();
+    $datetime->setTimezone(new DateTimeZone('Europe/Moscow'));
+    $timestamp = $datetime->getTimestamp();
+    $date = date('Y-m-d H:i:s', $timestamp);
 
-    $stmt = db_get_prepare_stmt($con, $sql, [$cost, $user_id, $lot_id]);
+    $res = [];
+    $sql = "INSERT INTO rates (dt_registration, price_user, user_id, lot_id) VALUES (?, ?, ?, ?)";
+
+    $stmt = db_get_prepare_stmt($con, $sql, [$date, $cost, $user_id, $lot_id]);
     $res  = mysqli_stmt_execute($stmt);
 
     return $res;
